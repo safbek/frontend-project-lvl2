@@ -4,8 +4,8 @@ install:
 install-deps:
 	npm ci
 
-gendiff:
-	node bin/gendiff.js
+run:
+	npx babel-node src/bin/gendiff.js
 
 publish:
 	npm publish --dry-run

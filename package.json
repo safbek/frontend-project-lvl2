@@ -2,10 +2,11 @@
   "name": "project2",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "type": "module",
+  "main": "dist/gendiff.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "NODE_ENV=production babel src --out-dir dist",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -16,13 +17,24 @@
   "bugs": {
     "url": "https://github.com/safbek/frontend-project-lvl2/issues"
   },
-  "homepage": "https://github.com/safbek/frontend-project-lvl2#readme",
   "bin": {
-    "gendiff": "bin/gendiff.js"
+    "gendiff": "dist/bin/gendiff.js"
   },
+  "homepage": "https://github.com/safbek/frontend-project-lvl2#readme",
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.6",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "commander": "^5.1.0",
+    "lodash": "^4.17.15"
   }
 }
