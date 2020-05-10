@@ -1,4 +1,5 @@
 import fs from 'fs';
+// import path from 'path';
 
 const genDiff = (path1, path2) => {
   const dataFromFile1 = JSON.parse(fs.readFileSync(path1, 'utf8'));
