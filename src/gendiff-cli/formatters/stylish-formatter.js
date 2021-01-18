@@ -15,6 +15,21 @@ const stringify = (obj, s) => {
   return res.join('\n');
 };
 
+const getOperator = (t) => {
+  let operator;
+  if (t === 'added') {
+    operator = '+';
+  } else if (t === 'unchanged') {
+    operator = ' ';
+  } else {
+    operator = '-';
+  }
+  return operator;
+};
+
+const singleKeyDiff = (value, type, s = 2) => {
+  
+};
 
 const stylish = (tree) => {
   const iter = (obj, s = 2) => {
@@ -26,32 +41,27 @@ const stylish = (tree) => {
         name, type, value, children, oldValue, newValue,
       } = key;
 
-      // let operator;
-      // if (type === 'added') {
-      //   operator = '+';
-      // }
+      const stringifyValue = (val, n) => {
+        if (typeof val !== 'object' || val === null) {
+          return val;
+        }
+        return `{\n${stringify(val, n)}\n${indentBraces}}`;
+      };
+
+      const newLine = '\n';
+      const valueStr = stringifyValue(value, s);
+      const operator = getOperator(type);
+      const prefix = `${newLine}${indent}${operator} ${name}`;
 
       let formattedStr;
-      const newLine = '\n';
-
       if (type === 'unchanged' && children !== undefined) {
         formattedStr = `${newLine}${indentBraces}${name}: {${iter(children, s + 4)}${newLine}${indentBraces}}`;
-      } else if (type === 'unchanged' && children === undefined) {
-        formattedStr = `${newLine}${indentBraces}${name}: ${value}`;
-      } else if (type === 'added' && typeof value !== 'object') {
-        formattedStr = `${newLine}${indent}+ ${name}: ${value}`;
-      } else if (type === 'added' && typeof value === 'object') {
-        formattedStr = `${newLine}${indent}+ ${name}: {${newLine}${stringify(value, s)}${newLine}${indentBraces}}`;
-      } else if (type === 'removed' && typeof value !== 'object') {
-        formattedStr = `${newLine}${indent}- ${name}: ${value}`;
-      } else if (type === 'removed' && typeof value === 'object') {
-        formattedStr = `${newLine}${indent}- ${name}: {${newLine}${stringify(value, s)}${newLine}${indentBraces}}`;
+      } else if (type === 'unchanged' || type === 'added' || type === 'removed') {
+        formattedStr = `${prefix}: ${valueStr}`;
       } else if (type === 'changed') {
-        if (typeof oldValue === 'object') {
-          formattedStr = `${newLine}${indent}- ${name}: {${newLine}${stringify(oldValue, s)}${newLine}${indentBraces}}${newLine}${indent}+ ${name}: ${newValue}`;
-        } else {
-          formattedStr = `${newLine}${indent}- ${name}: ${oldValue}${newLine}${indent}+ ${name}: ${newValue}`;
-        }
+        const oldValueStr = stringifyValue(oldValue, s);
+        const newValueStr = stringifyValue(newValue, s);
+        formattedStr = `${newLine}${indent}- ${name}: ${oldValueStr}${newLine}${indent}+ ${name}: ${newValueStr}`;
       }
       return formattedStr.replace(/,/g, '');
     });
