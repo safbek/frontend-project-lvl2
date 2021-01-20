@@ -20,7 +20,7 @@ const expected = [
             key: value
           + ops: vops
         }
-    },
+    }
     group1: {
       - baz: bas
       + baz: bars
@@ -29,13 +29,13 @@ const expected = [
             key: value
         }
       + nest: str
-    },
+    }
   - group2: {
         abc: 12345
         deep: {
             id: 45
         }
-    },
+    }
   + group3: {
         fee: 100500
         deep: {
@@ -47,6 +47,21 @@ const expected = [
   }`,
 ].join('\n');
 
+const expected2 = [
+  `Property 'common.follow' was added with value: false
+Property 'common.setting2' was removed
+Property 'common.setting3' was updated. From true to null
+Property 'common.setting4' was added with value: 'blah blah'
+Property 'common.setting5' was added with value: [complex value]
+Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
+Property 'common.setting6.ops' was added with value: 'vops'
+Property 'group1.baz' was updated. From 'bas' to 'bars'
+Property 'group1.nest' was updated. From [complex value] to 'str'
+Property 'group2' was removed
+Property 'group3' was added with value: [complex value]
+`,
+].join('\n');
+
 test('difference between json files', () => {
-  expect(gendiff('__fixtures__/before.json', '__fixtures__/after.json')).toBe(expected);
+  expect(gendiff('__fixtures__/before.json', '__fixtures__/after.json')).toBe(expected2);
 });

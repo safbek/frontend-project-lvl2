@@ -6,6 +6,7 @@ const formatters = {
   plain,
 };
 
-const getFormatter = (formatName = 'stylish') => formatters[formatName];
+// const getFormatter = (formatName = 'stylish') => formatters[formatName];
+const getFormatter = () => plain;
 
 export default getFormatter;

@@ -1,8 +1,22 @@
+const getOperator = (type) => {
+  let operator;
+  if (type === 'added') {
+    operator = '+';
+  } else if (type === 'removed') {
+    operator = '-';
+  } else if (type === 'unchanged') {
+    operator = ' ';
+  } else {
+    throw new Error(`unexpected operator ${type}`);
+  }
+  return operator;
+};
+
 const stringify = (obj, s) => {
   const indent = ' '.repeat(s + 6);
-  let str;
   const keys = Object.keys(obj);
 
+  let str;
   const res = keys.map((key) => {
     const value = obj[key];
     if (typeof value === 'object') {
@@ -15,60 +29,45 @@ const stringify = (obj, s) => {
   return res.join('\n');
 };
 
-const getOperator = (t) => {
-  let operator;
-  if (t === 'added') {
-    operator = '+';
-  } else if (t === 'unchanged') {
-    operator = ' ';
-  } else {
-    operator = '-';
+const stringifyValue = (val, s) => {
+  const indentBraces = ' '.repeat(s + 2);
+
+  if (typeof val !== 'object' || val === null) {
+    return val;
   }
-  return operator;
+  return `{\n${stringify(val, s)}\n${indentBraces}}`;
 };
 
-const singleKeyDiff = (value, type, s = 2) => {
-  
+const singleValueFormattedStr = (name, type, value, s) => {
+  const indent = ' '.repeat(s);
+  const operator = getOperator(type);
+  const prefix = `\n${indent}${operator} ${name}`;
+  const valueStr = stringifyValue(value, s);
+
+  return `${prefix}: ${valueStr}`;
 };
 
-const stylish = (tree) => {
-  const iter = (obj, s = 2) => {
-    const indent = ' '.repeat(s);
-    const indentBraces = ' '.repeat(s + 2);
+const stylishSingleKeyDiff = (keyDiff, s = 2) => {
+  const {
+    name, type, value, children, oldValue, newValue,
+  } = keyDiff;
 
-    const res = obj.map((key) => {
-      const {
-        name, type, value, children, oldValue, newValue,
-      } = key;
+  let formattedStr;
+  const indentBraces = ' '.repeat(s + 2);
 
-      const stringifyValue = (val, n) => {
-        if (typeof val !== 'object' || val === null) {
-          return val;
-        }
-        return `{\n${stringify(val, n)}\n${indentBraces}}`;
-      };
+  if (type === 'unchanged' && children !== undefined) {
+    formattedStr = `\n${indentBraces}${name}: {${children.map((child) => stylishSingleKeyDiff(child, s + 4)).join('')}\n${indentBraces}}`;
+  } else if (type === 'changed') {
+    formattedStr = `${singleValueFormattedStr(name, 'removed', oldValue, s)}${singleValueFormattedStr(name, 'added', newValue, s)}`;
+  } else {
+    formattedStr = singleValueFormattedStr(name, type, value, s);
+  }
+  return formattedStr;
+};
 
-      const newLine = '\n';
-      const valueStr = stringifyValue(value, s);
-      const operator = getOperator(type);
-      const prefix = `${newLine}${indent}${operator} ${name}`;
-
-      let formattedStr;
-      if (type === 'unchanged' && children !== undefined) {
-        formattedStr = `${newLine}${indentBraces}${name}: {${iter(children, s + 4)}${newLine}${indentBraces}}`;
-      } else if (type === 'unchanged' || type === 'added' || type === 'removed') {
-        formattedStr = `${prefix}: ${valueStr}`;
-      } else if (type === 'changed') {
-        const oldValueStr = stringifyValue(oldValue, s);
-        const newValueStr = stringifyValue(newValue, s);
-        formattedStr = `${newLine}${indent}- ${name}: ${oldValueStr}${newLine}${indent}+ ${name}: ${newValueStr}`;
-      }
-      return formattedStr.replace(/,/g, '');
-    });
-    return res;
-  };
-  const formattedDiffs = iter(tree);
-  return `{${formattedDiffs}\n  }`;
+const stylish = (keyDiffs) => {
+  const formattedDiffs = keyDiffs.map((keyDiff) => stylishSingleKeyDiff(keyDiff));
+  return `{${formattedDiffs.join('')}\n  }`;
 };
 
 export default stylish;
