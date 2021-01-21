@@ -67,7 +67,7 @@ const stylishSingleKeyDiff = (keyDiff, s = 2) => {
 
 const stylish = (keyDiffs) => {
   const formattedDiffs = keyDiffs.map((keyDiff) => stylishSingleKeyDiff(keyDiff));
-  return `{${formattedDiffs.join('')}\n  }`;
+  return `{${formattedDiffs.join('')}\n}`;
 };
 
 export default stylish;

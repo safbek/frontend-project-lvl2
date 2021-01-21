@@ -44,7 +44,7 @@ const expected = [
             }
         }
     }
-  }`,
+}`,
 ].join('\n');
 
 const expected2 = [
