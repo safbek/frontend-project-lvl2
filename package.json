@@ -2,7 +2,7 @@
   "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/gendiff.js",
+  "main": "bin/gendiff.js",
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
   },
