@@ -62,6 +62,146 @@ Property 'group3' was added with value: [complex value]
 `,
 ].join('\n');
 
-test('difference between json files', () => {
+const expected3 = [
+  `[
+  {
+    "name": "common",
+    "type": "unchanged",
+    "children": [
+      {
+        "name": "follow",
+        "type": "added",
+        "value": false
+      },
+      {
+        "name": "setting1",
+        "type": "unchanged",
+        "value": "Value 1"
+      },
+      {
+        "name": "setting2",
+        "type": "removed",
+        "value": 200
+      },
+      {
+        "name": "setting3",
+        "type": "changed",
+        "oldValue": true,
+        "newValue": null
+      },
+      {
+        "name": "setting4",
+        "type": "added",
+        "value": "blah blah"
+      },
+      {
+        "name": "setting5",
+        "type": "added",
+        "value": {
+          "key5": "value5"
+        }
+      },
+      {
+        "name": "setting6",
+        "type": "unchanged",
+        "children": [
+          {
+            "name": "doge",
+            "type": "unchanged",
+            "children": [
+              {
+                "name": "wow",
+                "type": "changed",
+                "oldValue": "",
+                "newValue": "so much"
+              }
+            ]
+          },
+          {
+            "name": "key",
+            "type": "unchanged",
+            "value": "value"
+          },
+          {
+            "name": "ops",
+            "type": "added",
+            "value": "vops"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "group1",
+    "type": "unchanged",
+    "children": [
+      {
+        "name": "baz",
+        "type": "changed",
+        "oldValue": "bas",
+        "newValue": "bars"
+      },
+      {
+        "name": "foo",
+        "type": "unchanged",
+        "value": "bar"
+      },
+      {
+        "name": "nest",
+        "type": "changed",
+        "oldValue": {
+          "key": "value"
+        },
+        "newValue": "str"
+      }
+    ]
+  },
+  {
+    "name": "group2",
+    "type": "removed",
+    "value": {
+      "abc": 12345,
+      "deep": {
+        "id": 45
+      }
+    }
+  },
+  {
+    "name": "group3",
+    "type": "added",
+    "value": {
+      "fee": 100500,
+      "deep": {
+        "id": {
+          "number": 45
+        }
+      }
+    }
+  }
+]`,
+].join('\n');
+
+test('difference between json files in stylish format', () => {
+  expect(gendiff('__fixtures__/before.json', '__fixtures__/after.json')).toBe(expected);
+});
+
+test('difference between yaml files in stylish format', () => {
+  expect(gendiff('__fixtures__/before.yml', '__fixtures__/after.yml')).toBe(expected);
+});
+
+test('difference between json files in plain format', () => {
   expect(gendiff('__fixtures__/before.json', '__fixtures__/after.json')).toBe(expected2);
+});
+
+test('difference between yaml files in plain format', () => {
+  expect(gendiff('__fixtures__/before.yml', '__fixtures__/after.yml')).toBe(expected2);
+});
+
+
+test('difference between json files in json format', () => {
+  expect(gendiff('__fixtures__/before.json', '__fixtures__/after.json')).toBe(expected3);
+});
+
+test('difference between yaml files in json format', () => {
+  expect(gendiff('__fixtures__/before.yml', '__fixtures__/after.yml')).toBe(expected2);
 });

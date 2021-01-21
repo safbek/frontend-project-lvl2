@@ -5,7 +5,7 @@ install-deps:
 	npm ci
 
 run:
-	npx src/bin/gendiff.js __fixtures__/before.json __fixtures__/after.json plain
+	npx src/bin/gendiff.js __fixtures__/before.json __fixtures__/after.json json
 
 # run:
 # 	npx src/bin/gendiff.js __fixtures__/before.yml __fixtures__/after.yml
