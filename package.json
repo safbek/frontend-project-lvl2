@@ -4,7 +4,7 @@
   "description": "",
   "main": "bin/gendiff.js",
   "bin": {
-    "gendiff": "dist/bin/gendiff.js"
+    "gendiff": "bin/gendiff.js"
   },
   "scripts": {
     "test": "npx -n --experimental-vm-modules jest"
