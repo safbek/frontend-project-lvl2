@@ -59,7 +59,7 @@ const genDiff = (path1, path2, formatName) => {
 
   const formatter = getFormatter(formatName);
   const formattedDiffs = formatter(arrayOfKeyDiffs);
-  // console.log(formattedDiffs);
+  console.log(formattedDiffs);
   return formattedDiffs;
 };
 
