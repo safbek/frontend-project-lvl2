@@ -51,7 +51,7 @@ const diffs = (obj1, obj2) => {
   return result;
 };
 
-const genDiff = (path1, path2, formatName = 'stylish') => {
+const genDiff = (path1, path2, formatName) => {
   const dataFromFile1 = parser(path1);
   const dataFromFile2 = parser(path2);
 
@@ -59,7 +59,7 @@ const genDiff = (path1, path2, formatName = 'stylish') => {
 
   const formatter = getFormatter(formatName);
   const formattedDiffs = formatter(arrayOfKeyDiffs);
-  console.log(formattedDiffs);
+  // console.log(formattedDiffs);
   return formattedDiffs;
 };
 
