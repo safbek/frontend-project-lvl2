@@ -23,8 +23,8 @@ const getResult = (otputFormat) => {
 test.each(getFilepaths(inputFormats))(
   'gendiff',
   (beforePath, afterPath) => {
-    expect(genDiff(beforePath, afterPath, 'stylish')).toBe(getResult('stylish').trim());
-    expect(genDiff(beforePath, afterPath, 'plain')).toBe(getResult('plain'));
-    expect(genDiff(beforePath, afterPath, 'json')).toBe(getResult('json').trim());
+    expect(genDiff(beforePath, afterPath, 'stylish')).toEqual(getResult('stylish'));
+    expect(genDiff(beforePath, afterPath, 'plain')).toEqual(getResult('plain'));
+    expect(genDiff(beforePath, afterPath, 'json')).toEqual(getResult('json'));
   },
 );
