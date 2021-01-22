@@ -2,7 +2,7 @@
   "name": "@hexlet/code",
   "version": "1.0.0",
   "description": "",
-  "main": "gendiff-cli.js",
+  "main": "src/gendiff-cli/gendiff-cli.js",
   "bin": {
     "gendiff": "src/bin/gendiff.js"
   },
