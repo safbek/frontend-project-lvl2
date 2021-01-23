@@ -6,10 +6,13 @@ const genDiff = (path1, path2, formatName = 'stylish') => {
   const dataFromFile1 = parser(path1);
   const dataFromFile2 = parser(path2);
 
+  console.log(path1);
+  console.log(path2);
+
+
   const arrayOfKeyDiffs = diffs(dataFromFile1, dataFromFile2);
 
   const formattedDiffs = getFormatter(arrayOfKeyDiffs, formatName);
-  console.log(formattedDiffs);
   return formattedDiffs;
 };
 
