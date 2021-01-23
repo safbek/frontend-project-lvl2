@@ -36,7 +36,7 @@ const plainSingleKeyDiff = (keyDiff, acc = '') => {
 
 const plain = (keyDiffs) => {
   const formattedDiffs = keyDiffs.map((keyDiff) => plainSingleKeyDiff(keyDiff));
-  return formattedDiffs.join('');
+  return formattedDiffs.join('').trim();
 };
 
 export default plain;
