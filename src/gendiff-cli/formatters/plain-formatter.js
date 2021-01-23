@@ -35,7 +35,6 @@ const plainSingleKeyDiff = (arrayOfkeyDiff) => {
   return iter(arrayOfkeyDiff, '');
 };
 
-
 const plain = (keyDiffs) => {
   const formattedDiffs = keyDiffs.map((keyDiff) => plainSingleKeyDiff(keyDiff));
   return formattedDiffs.join('').trim();
