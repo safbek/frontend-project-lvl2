@@ -1,30 +1,26 @@
 const getOperator = (type) => {
-  let operator;
   if (type === 'added') {
-    operator = '+';
-  } else if (type === 'removed') {
-    operator = '-';
-  } else if (type === 'unchanged') {
-    operator = ' ';
-  } else {
-    throw new Error(`unexpected operator ${type}`);
+    return '+';
   }
-  return operator;
+  if (type === 'removed') {
+    return '-';
+  }
+  if (type === 'unchanged') {
+    return ' ';
+  }
+  throw new Error(`unexpected operator ${type}`);
 };
 
 const stringify = (obj, s) => {
   const indent = ' '.repeat(s + 6);
   const keys = Object.keys(obj);
 
-  let str;
   const res = keys.map((key) => {
     const value = obj[key];
     if (typeof value === 'object') {
-      str = `${indent}${key}: {\n${stringify(value, s + 4)}\n${indent}}`;
-    } else {
-      str = `${indent}${key}: ${value}`;
+      return `${indent}${key}: {\n${stringify(value, s + 4)}\n${indent}}`;
     }
-    return str;
+    return `${indent}${key}: ${value}`;
   });
   return res.join('\n');
 };

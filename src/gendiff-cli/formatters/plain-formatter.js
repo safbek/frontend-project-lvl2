@@ -16,22 +16,22 @@ const plainSingleKeyDiff = (keyDiff, acc = '') => {
   } = keyDiff;
 
   let parentKeyName = acc;
-  let formattedStr;
   const prefix = `Property '${parentKeyName}${name}'`;
 
   if (type === 'unchanged' && children !== undefined) {
     parentKeyName += `${name}.`;
-    formattedStr = `${children.map((child) => plainSingleKeyDiff(child, parentKeyName)).join('')}`;
-  } else if (type === 'changed') {
-    formattedStr = `${prefix} was updated. From ${getValue(oldValue)} to ${getValue(newValue)}\n`;
-  } else if (type === 'added') {
-    formattedStr = `${prefix} was added with value: ${getValue(value)}\n`;
-  } else if (type === 'removed') {
-    formattedStr = `${prefix} was removed\n`;
-  } else {
-    formattedStr = '';
+    return `${children.map((child) => plainSingleKeyDiff(child, parentKeyName)).join('')}`;
   }
-  return formattedStr;
+  if (type === 'changed') {
+    return `${prefix} was updated. From ${getValue(oldValue)} to ${getValue(newValue)}\n`;
+  }
+  if (type === 'added') {
+    return `${prefix} was added with value: ${getValue(value)}\n`;
+  }
+  if (type === 'removed') {
+    return `${prefix} was removed\n`;
+  }
+  return '';
 };
 
 const plain = (keyDiffs) => {
