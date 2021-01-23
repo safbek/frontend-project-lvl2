@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import genDiff from '../src/gendiff-cli/gendiff-cli.js';
+import genDiff from '../index.js';
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
