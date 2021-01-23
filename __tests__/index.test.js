@@ -1,22 +1,20 @@
 import fs from 'fs';
-import { dirname } from 'path';
-import path from 'path';
-import genDiff from '../index.js';
+import module from 'path';
 import { fileURLToPath } from 'url';
-
+import genDiff from '../index.js';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = module.dirname(__filename);
 
 const inputFormats = ['json', 'yml', 'ini'];
 
 const getFilepaths = (formats) => formats.map((item) => [
-  path.join(__dirname, '..', '__fixtures__', `before.${item}`),
-  path.join(__dirname, '..', '__fixtures__', `after.${item}`),
+  module.join(__dirname, '..', '__fixtures__', `before.${item}`),
+  module.join(__dirname, '..', '__fixtures__', `after.${item}`),
 ]);
 
 const getResult = (otputFormat) => {
-  const resultPath = path.join(__dirname, '..', '__fixtures__', `diff-${otputFormat}`);
+  const resultPath = module.join(__dirname, '..', '__fixtures__', `diff-${otputFormat}`);
   return fs.readFileSync(resultPath, 'utf8');
 };
 
