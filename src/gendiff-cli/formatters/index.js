@@ -8,6 +8,6 @@ const formatters = {
   json,
 };
 
-const getFormatter = (formatName = 'stylish') => formatters[formatName];
+const getFormatter = (diffs, formatName) => formatters[formatName](diffs);
 
 export default getFormatter;
