@@ -1,7 +1,9 @@
 import fs from 'fs';
+import { dirname } from 'path';
 import path from 'path';
 import genDiff from '../index.js';
 import { fileURLToPath } from 'url';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -22,7 +24,7 @@ test.each(getFilepaths(inputFormats))(
   'gendiff',
   (beforePath, afterPath) => {
     expect(genDiff(beforePath, afterPath, 'stylish')).toEqual(getResult('stylish'));
-    expect(genDiff(beforePath, afterPath, 'plain')).toEqual(getResult('plain'));
+    expect(genDiff(beforePath, afterPath, 'plain')).toEqual(getResult('plain').trim());
     expect(genDiff(beforePath, afterPath, 'json')).toEqual(getResult('json'));
   },
 );

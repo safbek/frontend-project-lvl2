@@ -4,8 +4,8 @@ const diffs = (obj1, obj2) => {
   const keysFromObj1 = Object.keys(obj1);
   const keysFromObj2 = Object.keys(obj2);
 
-  const keys = _.uniq(_.concat(keysFromObj1, keysFromObj2)).sort();
-  const sortedKeys = [...keys].sort();
+  const uniqKeys = _.uniq(_.concat(keysFromObj1, keysFromObj2));
+  const sortedKeys = _.sortBy(uniqKeys);
 
   const result = sortedKeys.map((key) => {
     const value1 = obj1[key];

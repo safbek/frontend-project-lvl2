@@ -3,7 +3,6 @@ import path from 'path';
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-
 const parser = (file) => {
   const fileContents = fs.readFileSync(file, 'utf8');
   const format = path.extname(file);

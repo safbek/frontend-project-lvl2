@@ -48,17 +48,15 @@ const stylishSingleKeyDiff = (keyDiff, s = 2) => {
     name, type, value, children, oldValue, newValue,
   } = keyDiff;
 
-  let formattedStr;
   const indentBraces = ' '.repeat(s + 2);
 
   if (type === 'unchanged' && children !== undefined) {
-    formattedStr = `\n${indentBraces}${name}: {${children.map((child) => stylishSingleKeyDiff(child, s + 4)).join('')}\n${indentBraces}}`;
-  } else if (type === 'changed') {
-    formattedStr = `${singleValueFormattedStr(name, 'removed', oldValue, s)}${singleValueFormattedStr(name, 'added', newValue, s)}`;
-  } else {
-    formattedStr = singleValueFormattedStr(name, type, value, s);
+    return `\n${indentBraces}${name}: {${children.map((child) => stylishSingleKeyDiff(child, s + 4)).join('')}\n${indentBraces}}`;
   }
-  return formattedStr;
+  if (type === 'changed') {
+    return `${singleValueFormattedStr(name, 'removed', oldValue, s)}${singleValueFormattedStr(name, 'added', newValue, s)}`;
+  }
+  return singleValueFormattedStr(name, type, value, s);
 };
 
 const stylish = (keyDiffs) => {
