@@ -3,22 +3,21 @@ import path from 'path';
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-const parser = (file) => {
+const parse = (file) => {
   const fileContents = fs.readFileSync(file, 'utf8');
-  const format = path.extname(file);
+  const format = path.extname(file).slice(1);
 
-  if (format === '.json') {
-    return JSON.parse(fileContents);
+  switch (format) {
+    case 'json':
+      return JSON.parse(fileContents);
+    case 'yml':
+    case 'yaml':
+      return yaml.safeLoad(fileContents);
+    case 'ini':
+      return ini.parse(fileContents);
+    default:
+      throw new Error(`Unknown data format: '${format}'.`);
   }
-
-  if (format === '.yml') {
-    return yaml.safeLoad(fileContents);
-  }
-
-  if (format === '.ini') {
-    return ini.parse(fileContents);
-  }
-  throw new Error(`Unknown data format: '${format}'.`);
 };
 
-export default parser;
+export default parse;

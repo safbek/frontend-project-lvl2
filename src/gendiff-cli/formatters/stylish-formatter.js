@@ -5,7 +5,7 @@ const getOperator = (type) => {
   if (type === 'removed') {
     return '-';
   }
-  if (type === 'unchanged') {
+  if (type === 'nested') {
     return ' ';
   }
   throw new Error(`unexpected operator ${type}`);
@@ -50,7 +50,7 @@ const stylishSingleKeyDiff = (keyDiff, s = 2) => {
 
   const indentBraces = ' '.repeat(s + 2);
 
-  if (type === 'unchanged' && children !== undefined) {
+  if (type === 'nested' && children !== undefined) {
     return `\n${indentBraces}${name}: {${children.map((child) => stylishSingleKeyDiff(child, s + 4)).join('')}\n${indentBraces}}`;
   }
   if (type === 'changed') {

@@ -18,7 +18,7 @@ const plainSingleKeyDiff = (arrayOfkeyDiff) => {
 
     const prefix = `Property '${parentKeyName}${name}'`;
 
-    if (type === 'unchanged' && children !== undefined) {
+    if (type === 'nested' && children !== undefined) {
       return `${children.map((child) => iter(child, `${parentKeyName}${name}.`)).join('')}`;
     }
     if (type === 'changed') {

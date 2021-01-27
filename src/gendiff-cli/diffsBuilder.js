@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const diffs = (obj1, obj2) => {
+const buildDiff = (obj1, obj2) => {
   const keysFromObj1 = Object.keys(obj1);
   const keysFromObj2 = Object.keys(obj2);
 
@@ -11,31 +11,31 @@ const diffs = (obj1, obj2) => {
     const value1 = obj1[key];
     const value2 = obj2[key];
 
-    if (typeof value1 === 'object' && typeof value2 === 'object') {
+    if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
       return {
         name: key,
-        type: 'unchanged',
-        children: diffs(value1, value2),
+        type: 'nested',
+        children: buildDiff(value1, value2),
       };
     }
-    if (value1 === undefined) {
+    if (!_.has(obj1, key)) {
       return {
         name: key,
         type: 'added',
         value: value2,
       };
     }
-    if (value2 === undefined) {
+    if (!_.has(obj2, key)) {
       return {
         name: key,
         type: 'removed',
         value: value1,
       };
     }
-    if (value1 === value2) {
+    if (_.isEqual(value1, value2)) {
       return {
         name: key,
-        type: 'unchanged',
+        type: 'nested',
         value: value1,
       };
     }
@@ -49,4 +49,4 @@ const diffs = (obj1, obj2) => {
   return result;
 };
 
-export default diffs;
+export default buildDiff;
