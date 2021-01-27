@@ -19,13 +19,16 @@ jobs:
         node-version: [13.x]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: make install
-      env:
-        CI: true
-      test: npx -n --experimental-vm-modules jest
-      lint: npx eslint
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install
+        run: make install
+        env:
+          CI: true
+      - name: Run linter
+        run: make lint
+      - name: Test
+        run: make test
