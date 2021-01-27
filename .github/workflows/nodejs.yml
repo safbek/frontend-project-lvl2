@@ -27,5 +27,5 @@ jobs:
     - run: make install
       env:
         CI: true
-    - test: npx -n --experimental-vm-modules jest
-    - lint: npx eslint .
+      test: npx -n --experimental-vm-modules jest
+      lint: npx eslint
