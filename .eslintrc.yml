@@ -5,10 +5,10 @@ plugins:
 extends:
   - 'airbnb-base'
   - 'plugin:jest/recommended'
-env:
-  node: true
 parserOptions:
   ecmaVersion: 2020
+env:
+  node: true
 rules:
   no-console: 0
   import/extensions: 0 # FIXME: remove when rule will be adjusted for new nodejs version

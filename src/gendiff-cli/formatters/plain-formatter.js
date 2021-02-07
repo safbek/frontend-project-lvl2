@@ -10,7 +10,7 @@ const getValue = (value) => {
   return '[complex value]';
 };
 
-const plainSingleKeyDiff = (arrayOfkeyDiff) => {
+const render = (arrayOfkeyDiff) => {
   const iter = (keyDiff, parentKeyName) => {
     const {
       name, type, value, children, oldValue, newValue,
@@ -19,7 +19,7 @@ const plainSingleKeyDiff = (arrayOfkeyDiff) => {
     const prefix = `Property '${parentKeyName}${name}'`;
 
     if (type === 'nested' && children !== undefined) {
-      return `${children.map((child) => iter(child, `${parentKeyName}${name}.`)).join('')}`;
+      return children.map((child) => iter(child, `${parentKeyName}${name}.`)).join('');
     }
     if (type === 'changed') {
       return `${prefix} was updated. From ${getValue(oldValue)} to ${getValue(newValue)}\n`;
@@ -36,7 +36,7 @@ const plainSingleKeyDiff = (arrayOfkeyDiff) => {
 };
 
 const plain = (keyDiffs) => {
-  const formattedDiffs = keyDiffs.map((keyDiff) => plainSingleKeyDiff(keyDiff));
+  const formattedDiffs = keyDiffs.map((keyDiff) => render(keyDiff));
   return formattedDiffs.join('').trim();
 };
 
