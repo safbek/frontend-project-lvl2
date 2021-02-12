@@ -5,9 +5,12 @@ install-deps:
 	npm ci
 
 run:
-	npx src/bin/gendiff.js __fixtures__/before.json  __fixtures__/after.json
+	bin/gendiff.js __fixtures__/before.json  __fixtures__/after.json -f json
 test:
 	npx -n --experimental-vm-modules jest
+
+test-coverage:
+	npm test -- --coverage --coverageProvider=v8
 
 watch:
 	npx -n --experimental-vm-modules jest --watchAll
