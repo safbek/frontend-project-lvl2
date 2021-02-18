@@ -12,7 +12,7 @@ const parse = (file) => {
       return JSON.parse(fileContents);
     case 'yml':
     case 'yaml':
-      return yaml.safeLoad(fileContents);
+      return yaml.load(fileContents);
     case 'ini':
       return ini.parse(fileContents);
     default:
