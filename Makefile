@@ -5,7 +5,7 @@ install-deps:
 	npm ci
 
 run:
-	bin/gendiff.js __fixtures__/before.json  __fixtures__/after.json -f json
+	npx src/bin/gendiff.js -f json __fixtures__/before.json  __fixtures__/after.json
 test:
 	npx -n --experimental-vm-modules jest
 
