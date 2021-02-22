@@ -6,7 +6,6 @@ import ini from 'ini';
 const parse = (file) => {
   const fileContents = fs.readFileSync(file, 'utf8');
   const format = path.extname(file).slice(1);
-
   switch (format) {
     case 'json':
       return JSON.parse(fileContents);
