@@ -10,7 +10,7 @@
       },
       {
         "name": "setting1",
-        "type": "nested",
+        "type": "unchanged",
         "value": "Value 1"
       },
       {
@@ -54,7 +54,7 @@
           },
           {
             "name": "key",
-            "type": "nested",
+            "type": "unchanged",
             "value": "value"
           },
           {
@@ -78,7 +78,7 @@
       },
       {
         "name": "foo",
-        "type": "nested",
+        "type": "unchanged",
         "value": "bar"
       },
       {

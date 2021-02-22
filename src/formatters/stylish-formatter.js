@@ -5,7 +5,7 @@ const getOperator = (type) => {
   if (type === 'removed') {
     return '-';
   }
-  if (type === 'nested') {
+  if (type === 'nested' || type === 'unchanged') {
     return ' ';
   }
   throw new Error(`unexpected operator ${type}`);

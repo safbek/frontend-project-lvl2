@@ -35,7 +35,7 @@ const buildDiff = (obj1, obj2) => {
     if (_.isEqual(value1, value2)) {
       return {
         name: key,
-        type: 'nested',
+        type: 'unchanged',
         value: value1,
       };
     }

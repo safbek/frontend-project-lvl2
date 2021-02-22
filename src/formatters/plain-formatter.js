@@ -18,19 +18,20 @@ const render = (arrayOfkeyDiff) => {
 
     const prefix = `Property '${parentKeyName}${name}'`;
 
-    if (type === 'nested' && children !== undefined) {
-      return children.map((child) => iter(child, `${parentKeyName}${name}.`)).join('');
+    switch (type) {
+      case 'nested':
+        return children.map((child) => iter(child, `${parentKeyName}${name}.`)).join('');
+      case 'changed':
+        return `${prefix} was updated. From ${getValue(oldValue)} to ${getValue(newValue)}\n`;
+      case 'unchanged':
+        return '';
+      case 'added':
+        return `${prefix} was added with value: ${getValue(value)}\n`;
+      case 'removed':
+        return `${prefix} was removed\n`;
+      default:
+        throw new Error(`unexpected type ${type}`);
     }
-    if (type === 'changed') {
-      return `${prefix} was updated. From ${getValue(oldValue)} to ${getValue(newValue)}\n`;
-    }
-    if (type === 'added') {
-      return `${prefix} was added with value: ${getValue(value)}\n`;
-    }
-    if (type === 'removed') {
-      return `${prefix} was removed\n`;
-    }
-    return '';
   };
   return iter(arrayOfkeyDiff, '');
 };

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import parse from './parsers.js';
-import getFormatter from './formatters/index.js';
+import format from './formatters/index.js';
 import buildDiff from './diffsBuilder.js';
 
 const genDiff = (path1, path2, formatName = 'stylish') => {
@@ -16,7 +16,7 @@ const genDiff = (path1, path2, formatName = 'stylish') => {
 
   const diff = buildDiff(dataFromFile1, dataFromFile2);
 
-  const formattedDiff = getFormatter(diff, formatName);
+  const formattedDiff = format(diff, formatName);
   return formattedDiff;
 };
 
