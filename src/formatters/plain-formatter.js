@@ -11,10 +11,10 @@ const getValue = (value) => {
 };
 
 const render = (arrayOfkeyDiff) => {
-  const iter = (keyDiff, parentKeyName) => {
+  const iter = (diff, parentKeyName) => {
     const {
       name, type, value, children, oldValue, newValue,
-    } = keyDiff;
+    } = diff;
 
     const prefix = `Property '${parentKeyName}${name}'`;
 
@@ -35,9 +35,9 @@ const render = (arrayOfkeyDiff) => {
   return iter(arrayOfkeyDiff, '');
 };
 
-const plain = (keyDiffs) => {
-  const formattedDiffs = keyDiffs.map((keyDiff) => render(keyDiff));
-  return formattedDiffs.join('').trim();
+const plain = (nodes) => {
+  const lines = nodes.map((node) => render(node));
+  return lines.join('').trim();
 };
 
 export default plain;
