@@ -1,16 +1,3 @@
-const getOperator = (type) => {
-  if (type === 'added') {
-    return '+';
-  }
-  if (type === 'removed') {
-    return '-';
-  }
-  if (type === 'nested' || type === 'unchanged') {
-    return ' ';
-  }
-  throw new Error(`unexpected operator ${type}`);
-};
-
 const stringify = (obj, s) => {
   const indent = ' '.repeat(s + 6);
   const keys = Object.keys(obj);
@@ -25,38 +12,41 @@ const stringify = (obj, s) => {
   return res.join('\n');
 };
 
-const stringifyValue = (val, s) => {
-  const indentBraces = ' '.repeat(s + 2);
+const render = (nodes) => {
+  const iter = (node, space = 2) => {
+    const indent = ' '.repeat(space);
+    const indentBraces = ' '.repeat(space + 2);
+    const {
+      name, type, value, children, oldValue, newValue,
+    } = node;
 
-  if (typeof val !== 'object' || val === null) {
-    return val;
-  }
-  return `{\n${stringify(val, s)}\n${indentBraces}}`;
-};
-
-const singleValueFormattedStr = (name, type, value, s) => {
-  const indent = ' '.repeat(s);
-  const operator = getOperator(type);
-  const prefix = `\n${indent}${operator} ${name}`;
-  const valueStr = stringifyValue(value, s);
-
-  return `${prefix}: ${valueStr}`;
-};
-
-const render = (diff, space = 2) => {
-  const {
-    name, type, value, children, oldValue, newValue,
-  } = diff;
-
-  const indent = ' '.repeat(space + 2);
-
-  if (type === 'nested' && children !== undefined) {
-    return `\n${indent}${name}: {${children.map((child) => render(child, space + 4)).join('')}\n${indent}}`;
-  }
-  if (type === 'changed') {
-    return `${singleValueFormattedStr(name, 'removed', oldValue, space)}${singleValueFormattedStr(name, 'added', newValue, space)}`;
-  }
-  return singleValueFormattedStr(name, type, value, space);
+    if (type === 'nested') {
+      return `\n${indentBraces}${name}: {${children.map((child) => iter(child, space + 4)).join('')}\n${indentBraces}}`;
+    }
+    if (type === 'unchanged') {
+      return `\n${indentBraces}${name}: ${value}`;
+    }
+    if (type === 'added' && typeof value !== 'object') {
+      return `\n${indent}+ ${name}: ${value}`;
+    }
+    if (type === 'added' && typeof value === 'object') {
+      return `\n${indent}+ ${name}: {\n${stringify(value, space)}\n${indentBraces}}`;
+    }
+    if (type === 'removed' && typeof value !== 'object') {
+      return `\n${indent}- ${name}: ${value}`;
+    }
+    if (type === 'removed' && typeof value === 'object') {
+      return `\n${indent}- ${name}: {\n${stringify(value, space)}\n${indentBraces}}`;
+    }
+    if (type === 'changed') {
+      if (typeof oldValue === 'object') {
+        return `\n${indent}- ${name}: {\n${stringify(oldValue, space)}\n${indentBraces}}\n${indent}+ ${name}: ${newValue}`;
+      }
+      return `\n${indent}- ${name}: ${oldValue}\n${indent}+ ${name}: ${newValue}`;
+    }
+    throw new Error(`unexpected type ${type}`);
+  };
+  return iter(nodes);
 };
 
 const stylish = (nodes) => {
