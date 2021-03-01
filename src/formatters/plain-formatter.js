@@ -1,39 +1,44 @@
+import _ from 'lodash';
+
 const getValue = (value) => {
-  if (value === false || value === true
-  || value === null || value === 0) {
+  if (_.isBoolean(value) || _.isNull(value)) {
     return value;
   }
 
-  if (typeof value !== 'object') {
+  if (_.isString(value)) {
     return `'${value}'`;
   }
-  return '[complex value]';
+
+  if (typeof value === 'object') {
+    return '[complex value]';
+  }
+  return value;
 };
 
-const render = (arrayOfkeyDiff) => {
-  const iter = (diff, parentKeyName) => {
+const render = (node) => {
+  const iter = (diffNode, parentKeyName) => {
     const {
       name, type, value, children, oldValue, newValue,
-    } = diff;
+    } = diffNode;
 
-    const prefix = `Property '${parentKeyName}${name}'`;
+    const currentPath = `${parentKeyName}${name}`;
 
     switch (type) {
       case 'nested':
-        return children.map((child) => iter(child, `${parentKeyName}${name}.`)).join('');
+        return children.map((child) => iter(child, `${currentPath}.`)).join('');
       case 'changed':
-        return `${prefix} was updated. From ${getValue(oldValue)} to ${getValue(newValue)}\n`;
+        return `Property '${currentPath}' was updated. From ${getValue(oldValue)} to ${getValue(newValue)}\n`;
       case 'unchanged':
         return '';
       case 'added':
-        return `${prefix} was added with value: ${getValue(value)}\n`;
+        return `Property '${currentPath}' was added with value: ${getValue(value)}\n`;
       case 'removed':
-        return `${prefix} was removed\n`;
+        return `Property '${currentPath}' was removed\n`;
       default:
         throw new Error(`unexpected type ${type}`);
     }
   };
-  return iter(arrayOfkeyDiff, '');
+  return iter(node, '');
 };
 
 const plain = (nodes) => {

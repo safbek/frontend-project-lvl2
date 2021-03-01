@@ -30,8 +30,6 @@ jobs:
           CI: true
       - name: Run linter
         run: make lint
-      - name: Test
-        run: make test
       - name: Test & publish code coverage
         # Publish code coverage on Code Climate
         # https://github.com/paambaati/codeclimate-action

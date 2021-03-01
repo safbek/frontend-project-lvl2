@@ -4,10 +4,10 @@ const buildDiff = (obj1, obj2) => {
   const keysFromObj1 = Object.keys(obj1);
   const keysFromObj2 = Object.keys(obj2);
 
-  const uniqKeys = _.uniq([...keysFromObj1, ...keysFromObj2]);
+  const uniqKeys = _.union(keysFromObj1, keysFromObj2);
   const sortedKeys = _.sortBy(uniqKeys);
 
-  const result = sortedKeys.map((key) => {
+  const diff = sortedKeys.map((key) => {
     const value1 = obj1[key];
     const value2 = obj2[key];
 
@@ -46,7 +46,7 @@ const buildDiff = (obj1, obj2) => {
       newValue: value2,
     };
   });
-  return result;
+  return diff;
 };
 
 export default buildDiff;

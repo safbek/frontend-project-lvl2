@@ -43,25 +43,25 @@ const singleValueFormattedStr = (name, type, value, s) => {
   return `${prefix}: ${valueStr}`;
 };
 
-const stylishSingleKeyDiff = (keyDiff, s = 2) => {
+const render = (diff, space = 2) => {
   const {
     name, type, value, children, oldValue, newValue,
-  } = keyDiff;
+  } = diff;
 
-  const indentBraces = ' '.repeat(s + 2);
+  const indent = ' '.repeat(space + 2);
 
   if (type === 'nested' && children !== undefined) {
-    return `\n${indentBraces}${name}: {${children.map((child) => stylishSingleKeyDiff(child, s + 4)).join('')}\n${indentBraces}}`;
+    return `\n${indent}${name}: {${children.map((child) => render(child, space + 4)).join('')}\n${indent}}`;
   }
   if (type === 'changed') {
-    return `${singleValueFormattedStr(name, 'removed', oldValue, s)}${singleValueFormattedStr(name, 'added', newValue, s)}`;
+    return `${singleValueFormattedStr(name, 'removed', oldValue, space)}${singleValueFormattedStr(name, 'added', newValue, space)}`;
   }
-  return singleValueFormattedStr(name, type, value, s);
+  return singleValueFormattedStr(name, type, value, space);
 };
 
-const stylish = (keyDiffs) => {
-  const formattedDiffs = keyDiffs.map((keyDiff) => stylishSingleKeyDiff(keyDiff));
-  return `{${formattedDiffs.join('')}\n}`;
+const stylish = (nodes) => {
+  const lines = nodes.map((node) => render(node));
+  return `{${lines.join('')}\n}`;
 };
 
 export default stylish;
