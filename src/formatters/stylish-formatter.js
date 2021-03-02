@@ -1,11 +1,11 @@
-const stringify = (obj, s) => {
-  const indent = ' '.repeat(s + 6);
+const stringify = (obj, space) => {
+  const indent = ' '.repeat(space + 6);
   const keys = Object.keys(obj);
 
   const res = keys.map((key) => {
     const value = obj[key];
     if (typeof value === 'object') {
-      return `${indent}${key}: {\n${stringify(value, s + 4)}\n${indent}}`;
+      return `${indent}${key}: {\n${stringify(value, space + 4)}\n${indent}}`;
     }
     return `${indent}${key}: ${value}`;
   });
@@ -41,6 +41,10 @@ const render = (nodes) => {
     if (type === 'changed') {
       if (typeof oldValue === 'object') {
         return `\n${indent}- ${name}: {\n${stringify(oldValue, space)}\n${indentBraces}}\n${indent}+ ${name}: ${newValue}`;
+      }
+      if (typeof newValue === 'object' && newValue !== null) {
+        console.log(newValue);
+        return `\n${indent}- ${name}: {\n${oldValue}\n${indentBraces}}\n${indent}+ ${name}: ${stringify(newValue, space)}`;
       }
       return `\n${indent}- ${name}: ${oldValue}\n${indent}+ ${name}: ${newValue}`;
     }
