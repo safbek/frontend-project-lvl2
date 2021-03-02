@@ -1,15 +1,29 @@
-const stringify = (obj, space) => {
-  const indent = ' '.repeat(space + 6);
-  const keys = Object.keys(obj);
+import _ from 'lodash';
 
-  const res = keys.map((key) => {
-    const value = obj[key];
-    if (typeof value === 'object') {
-      return `${indent}${key}: {\n${stringify(value, space + 4)}\n${indent}}`;
-    }
-    return `${indent}${key}: ${value}`;
-  });
-  return res.join('\n');
+const stringify = (obj, space) => {
+  if (_.isBoolean(obj) || _.isNull(obj)) {
+    return obj;
+  }
+
+  if (_.isString(obj) || _.isNumber(obj)) {
+    return obj;
+  }
+
+  if (typeof obj === 'object') {
+    const keys = Object.keys(obj);
+
+    const res = keys.map((key) => {
+      const value = obj[key];
+      const indent = ' '.repeat(space + 6);
+      if (typeof value === 'object') {
+        return `${indent}${key}: {\n${stringify(value, space + 4)}\n${indent}}`;
+      }
+      return `\n${indent}${key}: ${value}`;
+    });
+    return res.join('\n');
+  }
+  return 'error';
+  // throw new Error(`unexpected type ${obj}`);
 };
 
 const render = (nodes) => {
@@ -26,27 +40,16 @@ const render = (nodes) => {
     if (type === 'unchanged') {
       return `\n${indentBraces}${name}: ${value}`;
     }
-    if (type === 'added' && typeof value !== 'object') {
-      return `\n${indent}+ ${name}: ${value}`;
+    if (type === 'added') {
+      return `\n${indent}+ ${name}: ${stringify(value, space)}`;
     }
-    if (type === 'added' && typeof value === 'object') {
-      return `\n${indent}+ ${name}: {\n${stringify(value, space)}\n${indentBraces}}`;
+
+    if (type === 'removed') {
+      return `\n${indent}- ${name}: ${stringify(value, space)}`;
     }
-    if (type === 'removed' && typeof value !== 'object') {
-      return `\n${indent}- ${name}: ${value}`;
-    }
-    if (type === 'removed' && typeof value === 'object') {
-      return `\n${indent}- ${name}: {\n${stringify(value, space)}\n${indentBraces}}`;
-    }
+
     if (type === 'changed') {
-      if (typeof oldValue === 'object') {
-        return `\n${indent}- ${name}: {\n${stringify(oldValue, space)}\n${indentBraces}}\n${indent}+ ${name}: ${newValue}`;
-      }
-      if (typeof newValue === 'object' && newValue !== null) {
-        console.log(newValue);
-        return `\n${indent}- ${name}: {\n${oldValue}\n${indentBraces}}\n${indent}+ ${name}: ${stringify(newValue, space)}`;
-      }
-      return `\n${indent}- ${name}: ${oldValue}\n${indent}+ ${name}: ${newValue}`;
+      return `\n${indent}- ${name}: ${stringify(oldValue, space)}\n${indent}+ ${name}: ${stringify(newValue, space)}`;
     }
     throw new Error(`unexpected type ${type}`);
   };
