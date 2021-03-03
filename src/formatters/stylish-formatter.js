@@ -1,29 +1,24 @@
 import _ from 'lodash';
 
-const stringify = (obj, space) => {
-  if (_.isBoolean(obj) || _.isNull(obj)) {
-    return obj;
+const stringify = (value, space) => {
+  if (_.isBoolean(value) || _.isNull(value)
+  || _.isString(value) || _.isNumber(value)) {
+    return value;
   }
 
-  if (_.isString(obj) || _.isNumber(obj)) {
-    return obj;
-  }
+  const indent = ' '.repeat(space + 6);
+  const indentBraces = ' '.repeat(space + 2);
 
-  if (typeof obj === 'object') {
-    const keys = Object.keys(obj);
+  const keys = Object.keys(value);
+  const res = keys.map((name) => {
+    const valueKey = value[name];
 
-    const res = keys.map((key) => {
-      const value = obj[key];
-      const indent = ' '.repeat(space + 6);
-      if (typeof value === 'object') {
-        return `${indent}${key}: {\n${stringify(value, space + 4)}\n${indent}}`;
-      }
-      return `\n${indent}${key}: ${value}`;
-    });
-    return res.join('\n');
-  }
-  return 'error';
-  // throw new Error(`unexpected type ${obj}`);
+    if (typeof valueKey === 'object') {
+      return `${indent}${name}: ${stringify(valueKey, space + 4)}\n`;
+    }
+    return `${indent}${name}: ${valueKey}\n`;
+  });
+  return `{\n${res.join('')}${indentBraces}}`;
 };
 
 const render = (nodes) => {
@@ -34,24 +29,20 @@ const render = (nodes) => {
       name, type, value, children, oldValue, newValue,
     } = node;
 
-    if (type === 'nested') {
-      return `\n${indentBraces}${name}: {${children.map((child) => iter(child, space + 4)).join('')}\n${indentBraces}}`;
+    switch (type) {
+      case 'nested':
+        return `\n${indentBraces}${name}: {${children.map((child) => iter(child, space + 4)).join('')}\n${indentBraces}}`;
+      case 'unchanged':
+        return `\n${indentBraces}${name}: ${stringify(value, space)}`;
+      case 'changed':
+        return `\n${indent}- ${name}: ${stringify(oldValue, space)}\n${indent}+ ${name}: ${stringify(newValue, space)}`;
+      case 'added':
+        return `\n${indent}+ ${name}: ${stringify(value, space)}`;
+      case 'removed':
+        return `\n${indent}- ${name}: ${stringify(value, space)}`;
+      default:
+        throw new Error(`unexpected type ${type}`);
     }
-    if (type === 'unchanged') {
-      return `\n${indentBraces}${name}: ${value}`;
-    }
-    if (type === 'added') {
-      return `\n${indent}+ ${name}: ${stringify(value, space)}`;
-    }
-
-    if (type === 'removed') {
-      return `\n${indent}- ${name}: ${stringify(value, space)}`;
-    }
-
-    if (type === 'changed') {
-      return `\n${indent}- ${name}: ${stringify(oldValue, space)}\n${indent}+ ${name}: ${stringify(newValue, space)}`;
-    }
-    throw new Error(`unexpected type ${type}`);
   };
   return iter(nodes);
 };
